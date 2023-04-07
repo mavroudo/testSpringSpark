@@ -40,7 +40,7 @@ public class SparkConfiguration {
     public SparkConf sparkConf() {
         String[] jars = new String[2];
         jars[0]="/code/src/main/resources/lib/hadoop-aws-3.2.0.jar";
-        jars[1]="/code/src/main/resources/lib/hadoop-client-3.2.0.jar";
+        jars[1]="/code/src/main/resources/lib/aws-java-sdk-bundle-1.11.375.jar";
         return new SparkConf()
                 .setAppName(appName)
                 .setMaster(masterUri)

@@ -22,7 +22,7 @@ RUN mvn clean compile package -f pom.xml -DskipTests
 #RUN mvn dependency:copy-dependencies -DoutputDirectory=/code/src/main/resources/lib
 
 RUN wget -O /code/src/main/resources/lib/hadoop-aws-3.2.0.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.0/hadoop-aws-3.2.0.jar
-RUN wget -O /code/src/main/resources/lib/hadoop-client-3.2.0.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-client/3.2.0/hadoop-client-3.2.0.jar
+RUN wget -O /code/src/main/resources/lib/aws-java-sdk-bundle-1.11.375.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.375/aws-java-sdk-bundle-1.11.375.jar
 
 CMD ["java", "-jar", "target/app-0.0.1-SNAPSHOT.jar"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
