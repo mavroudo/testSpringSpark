@@ -4,6 +4,8 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ public class Controller {
 
     @Autowired
     private JavaSparkContext javaSparkContext;
+
+    @Autowired
+    private SparkSession sparkSession;
 
     @RequestMapping(path = "/health",method = RequestMethod.GET)
     public ResponseEntity<String> healthcheck() {
@@ -51,9 +56,21 @@ public class Controller {
                 .map((Function<Tuple2<String, Tuple2<String, Integer>>, String>) k->k._1 ).collect();
         return new ResponseEntity<>(list,HttpStatus.OK);
 
-
-
-
     }
+
+    @RequestMapping(path="/spark-s3", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getS3(){
+        String path = String.format("%s%s%s", "s3a://siesta/", "test_pos", "/count.parquet/");
+
+        List<String> s = sparkSession.read().parquet(path)
+                .select("eventA")
+                .distinct()
+                .javaRDD()
+                .map((Function<Row, String>) row -> row.getString(0) )
+                .collect();
+        return new ResponseEntity<>(s,HttpStatus.OK);
+    }
+
+
 
 }

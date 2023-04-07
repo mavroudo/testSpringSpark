@@ -40,7 +40,17 @@ public class SparkConfiguration {
     public SparkConf sparkConf() {
         return new SparkConf()
                 .setAppName(appName)
-                .setMaster(masterUri);
+                .setMaster(masterUri)
+                .set("fs.s3a.endpoint", s3endpoint)
+                .set("fs.s3a.access.key", s3user)
+                .set("fs.s3a.secret.key", s3key)
+                .set("fs.s3a.connection.timeout", s3timeout)
+                .set("fs.s3a.path.style.access", "true")
+                .set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
+                .set("fs.s3a.connection.ssl.enabled", "true")
+                .set("fs.s3a.bucket.create.enabled", "true")
+                .set("spark.sql.sources.partitionOverwriteMode", "dynamic");
+
     }
 
     @Bean
