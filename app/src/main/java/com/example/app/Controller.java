@@ -17,6 +17,7 @@ import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/")
@@ -68,7 +69,9 @@ public class Controller {
                 .distinct();
         System.out.println(df.count());
 
-        List<String> s = df.map(new mymap(), Encoders.STRING()).toJavaRDD().collect();
+        List<String> s = df
+//                .map(new mymap(), Encoders.STRING())
+                .collectAsList().stream().map(x->x.getString(0)).collect(Collectors.toList()); //.toJavaRDD().collect();
                 //.
                 //.map((MapFunction<Row, String>) row -> row.getString(0) )
                 //.collect();
