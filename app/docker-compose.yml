@@ -1,0 +1,17 @@
+version: '3.2'
+networks:
+  cluster_net:
+    external:
+      name: siesta-cluster-net
+services:
+  funnel:
+    build: .
+    stdin_open: true
+    environment:
+      server.port: 8090
+    volumes:
+      - ./build:/root/.m2
+    ports:
+      - '8090:8090'
+    networks:
+      - cluster_net
