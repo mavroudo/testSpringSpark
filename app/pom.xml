@@ -16,6 +16,8 @@
 
 
     <properties>
+        <scala.version>2.12.12</scala.version>
+        <scala.compat.version>2.12</scala.compat.version>
         <java.version>11</java.version>
     </properties>
     <dependencies>
