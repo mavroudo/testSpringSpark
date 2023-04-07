@@ -38,6 +38,8 @@ public class SparkConfiguration {
 
     @Bean
     public SparkConf sparkConf() {
+        String[] jars = new String[1];
+        jars[0]="/code/src/main/resources/lib/hadoop-aws-3.2.0.jar";
         return new SparkConf()
                 .setAppName(appName)
                 .setMaster(masterUri)
@@ -49,7 +51,8 @@ public class SparkConfiguration {
                 .set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
                 .set("fs.s3a.connection.ssl.enabled", "true")
                 .set("fs.s3a.bucket.create.enabled", "true")
-                .set("spark.sql.sources.partitionOverwriteMode", "dynamic");
+                .set("spark.sql.sources.partitionOverwriteMode", "dynamic")
+                .setJars(jars);
 
     }
 

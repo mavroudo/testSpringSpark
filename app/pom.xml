@@ -70,6 +70,8 @@
             <version>3.0.0</version>
         </dependency>
 
+    <!--        Hadoop / S3 dependencies-->
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>

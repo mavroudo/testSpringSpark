@@ -21,5 +21,7 @@ RUN mkdir "/code/src/main/resources/lib"
 RUN mvn clean compile package -f pom.xml -DskipTests
 #RUN mvn dependency:copy-dependencies -DoutputDirectory=/code/src/main/resources/lib
 
+RUN wget -O /code/src/main/resources/lib https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.0/hadoop-aws-3.2.0.jar
+
 CMD ["java", "-jar", "target/app-0.0.1-SNAPSHOT.jar"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
