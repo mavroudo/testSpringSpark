@@ -2,6 +2,7 @@ package com.example.app;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.MapFunction;
@@ -16,6 +17,7 @@ import scala.Tuple2;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,14 +66,20 @@ public class Controller {
         String path = String.format("%s%s%s", "s3a://siesta/", "synthetic_pos", "/count.parquet/");
 
 
-        Dataset<Row> df = sparkSession.read().parquet(path)
+        List<String> s = sparkSession.read().parquet(path)
                 .select("eventA")
-                .distinct();
-        System.out.println(df.count());
+                .distinct().toJavaRDD().mapPartitions((FlatMapFunction<Iterator<Row>, String>) row->{
+                    List<String> list = new ArrayList<>();
+                    while(row.hasNext()){
+                        list.add(row.next().getString(0));
+                    }
+                    return list.iterator();
+                }).collect();
+//        System.out.println(df.count());
 
-        List<String> s = df
+//        List<String> s = df
 //                .map(new mymap(), Encoders.STRING())
-                .collectAsList().stream().map(x->x.getString(0)).collect(Collectors.toList()); //.toJavaRDD().collect();
+//                .collectAsList().stream().map(x->x.getString(0)).collect(Collectors.toList()); //.toJavaRDD().collect();
                 //.
                 //.map((MapFunction<Row, String>) row -> row.getString(0) )
                 //.collect();
