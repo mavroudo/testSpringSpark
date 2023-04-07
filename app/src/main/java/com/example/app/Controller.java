@@ -60,7 +60,7 @@ public class Controller {
 
     @RequestMapping(path="/spark-s3", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getS3(){
-        String path = String.format("%s%s%s", "s3a://siesta/", "test_pos", "/count.parquet/");
+        String path = String.format("%s%s%s", "s3a://siesta/", "synthetic_pos", "/count.parquet/");
 
         List<String> s = sparkSession.read().parquet(path)
                 .select("eventA")
