@@ -8,6 +8,7 @@
         <version>2.7.8</version>
         <relativePath/>
     </parent>
+
     <groupId>com.example</groupId>
     <artifactId>app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -16,7 +17,7 @@
 
 
     <properties>
-        <scala.version>2.12.12</scala.version>
+        <scala.version>2.12.8</scala.version>
         <scala.compat.version>2.12</scala.compat.version>
         <java.version>11</java.version>
     </properties>
@@ -62,12 +63,14 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
             <version>3.0.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
             <version>3.0.0</version>
+            <scope>provided</scope>
         </dependency>
 
     <!--        Hadoop / S3 dependencies-->
@@ -93,80 +96,30 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-
                     <source>11</source>
                     <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <version>2.0.9.RELEASE</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.1</version>
 
-                    <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
-                    <createDependencyReducedPom>true</createDependencyReducedPom>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>single</goal>
                         </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/spring.handlers</resource>
-                                </transformer>
-                                <transformer
-                                        implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
-                                    <resource>META-INF/spring.factories</resource>
-                                </transformer>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/spring.schemas</resource>
-                                </transformer>
-<!--                                <transformer-->
-<!--                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />-->
-<!--                                <transformer-->
-<!--                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-<!--                                    <mainClass>com.example.app.AppApplication</mainClass>-->
-<!--                                </transformer>-->
-                            </transformers>
-                        </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>com.example.app.AppApplication</mainClass> <!-- Replace with your main class -->
-                        </manifest>
-                    </archive>
-                </configuration>
+
             </plugin>
 
         </plugins>

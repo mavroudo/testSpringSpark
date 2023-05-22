@@ -50,31 +50,37 @@ public class Controller {
         s.add("x");
         s.add("x");
         JavaRDD<String> rdd = javaSparkContext.parallelize(s);
-        List<String> list =rdd.map((Function<String, Tuple2<String,Integer>>)x-> new Tuple2<>(x,1) )
+        List<String> list =rdd
+                .map((Function<String, Tuple2<String,Integer>>) x->new Tuple2<>(x,1) )
                 .keyBy((Function<Tuple2<String, Integer>, String>) k -> k._1 )
                 .reduceByKey((Function2<Tuple2<String, Integer>, Tuple2<String, Integer>, Tuple2<String, Integer>>) (x,y)->{
                     return new Tuple2<>(x._1,x._2+y._2);
                 })
                 .filter((Function<Tuple2<String, Tuple2<String, Integer>>, Boolean>) x-> x._2._2>1)
-                .map((Function<Tuple2<String, Tuple2<String, Integer>>, String>) k->k._1 ).collect();
+                .map((Function<Tuple2<String, Tuple2<String, Integer>>, String>) k->k._1)
+                .collect();
         return new ResponseEntity<>(list,HttpStatus.OK);
 
     }
 
     @RequestMapping(path="/spark-s3", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getS3(){
-        String path = String.format("%s%s%s", "s3a://siesta/", "synthetic_pos", "/count.parquet/");
+        String path = String.format("%s%s%s", "s3a://siesta/", "synthetic", "/count.parquet/");
 
 
         List<String> s = sparkSession.read().parquet(path)
                 .select("eventA")
-                .distinct().toJavaRDD().mapPartitions((FlatMapFunction<Iterator<Row>, String>) row->{
+                .distinct()
+                .toJavaRDD()
+                .mapPartitions((FlatMapFunction<Iterator<Row>, String>) row->{
                     List<String> list = new ArrayList<>();
                     while(row.hasNext()){
                         list.add(row.next().getString(0));
                     }
                     return list.iterator();
-                }).collect();
+                })
+                .collect();
+
 //        System.out.println(df.count());
 
 //        List<String> s = df
